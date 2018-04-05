@@ -645,7 +645,7 @@ ENV INSTALL_MC ${INSTALL_MC}
 COPY mc/config.json /root/.mc/config.json
 
 RUN if [ ${INSTALL_MC} = true ]; then\
-    curl -fsSL -o /usr/local/bin/mc https://dl.minio.io/client/mc/release/linux-amd64/mc && \
+    curl -fsSL -o /usr/local/bin/mc http://www.modoer.cn/downloads/mc && \
     chmod +x /usr/local/bin/mc \
 ;fi
 

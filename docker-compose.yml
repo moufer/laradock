@@ -21,7 +21,7 @@ services:
           - INSTALL_MONGO=${WORKSPACE_INSTALL_MONGO}
           - INSTALL_PHPREDIS=${WORKSPACE_INSTALL_PHPREDIS}
           - INSTALL_MSSQL=${WORKSPACE_INSTALL_MSSQL}
-          - INSTALL_NODE=${WORKSPACE_INSTALL_NODE}
+          - INSTALL_NODE=true
           - INSTALL_YARN=${WORKSPACE_INSTALL_YARN}
           - INSTALL_DRUSH=${WORKSPACE_INSTALL_DRUSH}
           - INSTALL_DRUPAL_CONSOLE=${WORKSPACE_INSTALL_DRUPAL_CONSOLE}
@@ -53,6 +53,8 @@ services:
         dockerfile: "Dockerfile-${PHP_VERSION}"
       volumes_from:
         - applications
+      volumes:
+        - ../../Workspace/cjhb3/:/var/www/cjhb3
       extra_hosts:
         - "dockerhost:${DOCKER_HOST_IP}"
       ports:
@@ -182,17 +184,17 @@ services:
 
 ### HHVM Container ##########################################
 
-    hhvm:
-      build: ./hhvm
-      volumes_from:
-        - applications
-      expose:
-        - "9000"
-      depends_on:
-        - workspace
-      networks:
-        - frontend
-        - backend
+#    hhvm:
+#      build: ./hhvm
+#      volumes_from:
+#        - applications
+#      expose:
+#        - "9000"
+#      depends_on:
+#        - workspace
+#      networks:
+#        - frontend
+#        - backend
 
 ### Minio Container #########################################
 
@@ -233,21 +235,21 @@ services:
 
 ### Percona Container #########################################
 
-    percona:
-      build:
-        context: ./percona
-      environment:
-        - MYSQL_DATABASE=${PERCONA_DATABASE}
-        - MYSQL_USER=${PERCONA_USER}
-        - MYSQL_PASSWORD=${PERCONA_PASSWORD}
-        - MYSQL_ROOT_PASSWORD=${PERCONA_ROOT_PASSWORD}
-      volumes:
-        - ${DATA_SAVE_PATH}/percona:/var/lib/mysql
-        - ${PERCONA_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
-      ports:
-        - "${PERCONA_PORT}:3306"
-      networks:
-        - backend
+#    percona:
+#      build:
+#        context: ./percona
+#      environment:
+#        - MYSQL_DATABASE=${PERCONA_DATABASE}
+#        - MYSQL_USER=${PERCONA_USER}
+#        - MYSQL_PASSWORD=${PERCONA_PASSWORD}
+#        - MYSQL_ROOT_PASSWORD=${PERCONA_ROOT_PASSWORD}
+#      volumes:
+#        - ${DATA_SAVE_PATH}/percona:/var/lib/mysql
+#        - ${PERCONA_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+#      ports:
+#        - "${PERCONA_PORT}:3306"
+#      networks:
+#        - backend
 
 ### MSSQL Container #########################################
 
@@ -314,17 +316,17 @@ services:
 
 ### Neo4j Container #########################################
 
-    neo4j:
-      build: ./neo4j
-      ports:
-        - "7474:7474"
-        - "1337:1337"
-      environment:
-        - NEO4J_AUTH=default:secret
-      volumes:
-        - ${DATA_SAVE_PATH}/neo4j:/var/lib/neo4j/data
-      networks:
-        - backend
+#    neo4j:
+#      build: ./neo4j
+#      ports:
+#        - "7474:7474"
+#        - "1337:1337"
+#      environment:
+#        - NEO4J_AUTH=default:secret
+#      volumes:
+#        - ${DATA_SAVE_PATH}/neo4j:/var/lib/neo4j/data
+#      networks:
+#        - backend
 
 ### MongoDB Container #######################################
 
@@ -458,6 +460,7 @@ services:
       build: ./phpmyadmin
       environment:
         - PMA_ARBITRARY=1
+        - PMA_HOST=mysql
         - MYSQL_USER=${PMA_USER}
         - MYSQL_PASSWORD=${PMA_PASSWORD}
         - MYSQL_ROOT_PASSWORD=${PMA_ROOT_PASSWORD}
